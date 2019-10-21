@@ -1,3 +1,17 @@
+# React Movies
+A React app to drag and drop some numbers between boxes.
+
+## Todos
+List of features to improve the app:
+* [x] ~~Allow to save numbers state on localStorage~~;
+* [ ] Add Redux to control app's state;
+* [ ] Add propTypes;
+* [ ] Add unit tests;
+* [ ] Use Styled Components for styling;
+* [ ] Eject from CRA and optmize webpack;
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

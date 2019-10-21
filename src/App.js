@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import TouchBackend from 'react-dnd-touch-backend';
 import NumberItem from './components/NumberItem';
 import NumberArea from './components/NumberArea';
 import ItemTypes from './ItemTypes';
@@ -81,6 +82,8 @@ const App = () => {
     }
   };
 
+  const handleClick = (item) => {}
+
   return (
     <div className="App">
       <header className="header">
@@ -89,14 +92,25 @@ const App = () => {
         </div>
       </header>
       <div className="container">
-        <DndProvider backend={HTML5Backend}>
+        <DndProvider backend={HTML5Backend} options={{
+          enableMouseEvents: true,
+        }}>
           <div className="boxes">
             {Array.isArray(boxes) && boxes.map(box => (
               <div key={box.id} className="box source-box">
                 <h2>{box.title}</h2>
-                <NumberArea box={box} onDrop={(item) => handleDrop(item, box)}>
+                <NumberArea
+                  box={box}
+                  onDrop={(item) => handleDrop(item, box)}
+                >
                   {Array.isArray(numbers) && numbers.filter(number => number.currentBox === box.id).map(number => (
-                    <NumberItem key={number.id} id={number.id} label={number.label} type={number.type} />
+                    <NumberItem
+                      key={number.id}
+                      id={number.id}
+                      label={number.label}
+                      type={number.type}
+                      onCLick={handleClick}
+                    />
                   ))}
                 </NumberArea>
               </div>

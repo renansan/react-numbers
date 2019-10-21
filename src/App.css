@@ -51,6 +51,7 @@ h2 {
 }
 .number {
   background-color: #eee;
+  border: 3px solid transparent;
   border-radius: 100%;
   cursor: move;
   display: block;
@@ -60,6 +61,14 @@ h2 {
   padding: 15px;
   text-align: center;
   width: 60px;
+}
+.number:hover {
+  background-color: #ddd;
+}
+.number.number--is-dragging {
+  color: white;
+  background-color: transparent;
+  border-color: #fff;
 }
 
 .drop-area {
