@@ -1,22 +1,95 @@
-.App {
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
+body {
+  background-color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: #444;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+section {
+  padding: 30px;
+}
+p {
+  margin-bottom: 15px;
+}
+img {
+  max-width: 100%;
+  display: block;
+}
+h1, h2, h3 {
+  margin-bottom: 15px;
+}
+h1 {
+  font-size: 32px;
+}
+h2 {
+  font-size: 24px;
+}
+.header {
+  padding: 30px;
+}
+.container {
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+.box {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+.numbers {
+  padding: 15px;
+  border-radius: 5px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex-wrap: wrap;
+}
+.number {
+  background-color: #eee;
+  border-radius: 100%;
+  cursor: move;
+  display: block;
+  height: 60px;
+  line-height: 30px;
+  margin: 5px;
+  padding: 15px;
+  text-align: center;
+  width: 60px;
 }
 
-.App-link {
-  color: #09d3ac;
+.drop-area {
+  background-color: #fafafa;
+  min-height: 100px;
+  transition: .3s;
+  position: relative;
+}
+.drop-area--over {
+  background-color: #eee;
+}
+.drop-area:before {
+  display: block;
+  height: 20px;
+  position: absolute;
+  right: 0;
+  top: -35px;
+}
+.drop-area--can-drop {
+  background-color: #ddd;
+}
+.drop-area--can-drop-in {
+  background-color: #28a745;
+}
+.drop-area--cant-drop-in {
+  background-color: #dc3545;
+}
+.drop-area--over.drop-area--can-drop-in:before {
+  content: "You can drop here!";
+}
+.drop-area--over.drop-area--cant-drop-in:before {
+  content: attr(data-error);
 }
