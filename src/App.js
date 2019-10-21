@@ -1,48 +1,14 @@
-import React, { useState, useCallback } from 'react';
-import { useDrag } from 'react-dnd';
-import { useDrop } from 'react-dnd'
+import React, { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import NumberItem from './components/NumberItem';
+import NumberArea from './components/NumberArea';
+import ItemTypes from './ItemTypes';
+import { customCanDrop } from './utils';
 import './App.css';
 
-const Types = {
-  NUMBER: 'number',
-  ODD: 'odd',
-  EVEN: 'even',
-  PRIME: 'prime',
-}
-
-const getTypes = n => {
-  const types = [];
-  const isPrime = (value) => {
-    for(var i = 2; i < value; i++) {
-      if(value % i === 0) {
-        return false;
-      }
-    }
-    return value > 1;
-  }
-
-  if (n % 2 === 0) {
-    types.push(Types.EVEN);
-  } else {
-    types.push(Types.ODD);
-  }
-
-  if (isPrime(n)) {
-    types.push(Types.PRIME);
-  }
-
-  return types;
-}
-
-const customCanDrop = (itemId, accepted) => {
-  const types = getTypes(itemId);
-  return accepted === 'any' || types.includes(accepted)
-}
-
-function App() {
-  const [boxes, setBox] = useState([
+const App = () => {
+  const [boxes] = useState([
     {
       id: 'box-numbers',
       title: 'Numbers',
@@ -53,50 +19,69 @@ function App() {
       id: 'box-odd',
       title: 'Odd Numbers',
       errorMessage: 'Only odd numbers are allowed',
-      accept: Types.ODD,
+      accept: ItemTypes.ODD,
     },
     {
       id: 'box-even',
       title: 'Even Numbers',
       errorMessage: 'Only even numbers are allowed',
-      accept: Types.EVEN,
+      accept: ItemTypes.EVEN,
     },
     {
       id: 'box-prime',
       title: 'Prime Numbers',
       errorMessage: 'Only prime numbers are allowed',
-      accept: Types.PRIME,
+      accept: ItemTypes.PRIME,
     },
   ]);
   const [numbers, setNumber] = useState(new Array(12).fill().map((item, idx) => ({
     id: idx + 1,
     label: idx + 1,
     currentBox: 'box-numbers',
-    type: Types.NUMBER,
+    type: ItemTypes.NUMBER,
   })));
 
-  const handleDrop = useCallback(
-    (item, box) => {
-      const id = item.id;
-      if (customCanDrop(id, box.accept)) {
-        setNumber(prevState => {
-          const numbers = prevState.map(number => {
-            if (number.id === id) {
-              number.currentBox = box.id;
-            }
-            return number;
-          })
-          return numbers;
-        });
-      }
+  /**
+   * Handle Drop
+   * Update state on drop changes
+   *
+   * @param  {Object} item React Dnd Item's object
+   * @param  {Object} box  Current box data
+   */
+  const handleDrop = (item, box) => {
+    const id = item.id;
+    if (customCanDrop(id, ItemTypes, box.accept)) {
+      setNumber(prevState => {
+        const numbers = prevState.map(number => {
+          if (number.id === id) {
+            number.currentBox = box.id;
+          }
+          return number;
+        })
+        return numbers;
+      });
     }
-  );
+  };
 
   return (
     <div className="App">
       <header className="header">
         <div className="container">
           <h1>Drag and Drop Numbers</h1>
+          <form className="form form-filter-numbers">
+            <label className="form-control">
+              <input type="checkbox" checked />
+              <span>Odd</span>
+            </label>
+            <label className="form-control">
+              <input type="checkbox" checked />
+              <span>Even</span>
+            </label>
+            <label className="form-control">
+              <input type="checkbox" checked />
+              <span>Prime</span>
+            </label>
+          </form>
         </div>
       </header>
       <div className="container">
@@ -117,42 +102,6 @@ function App() {
       </div>
     </div>
   );
-}
-
-const NumberItem = ({ id, label, type }) => {
-  const [collectedProps, drag] = useDrag({
-    item: { id, type },
-  });
-  return <span ref={drag} className="number">{label}</span>
-}
-
-const NumberArea = ({ box, children, onDrop }) => {
-  const { accept, errorMessage } = box;
-  const [{ isOver, canDrop, currentItem }, drop] = useDrop({
-    accept: Types.NUMBER,
-    drop: onDrop,
-    collect: monitor => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-      currentItem: monitor.getItem(),
-    }),
-  });
-
-  const canDropIn = currentItem && customCanDrop(currentItem.id, accept);
-
-  const isOverClass = (isOver) ? 'drop-area--over' : '';
-  const canDropClass = (canDrop) ? 'drop-area--can-drop' : '';
-  const canDropInClass = (canDrop && canDropIn) ? 'drop-area--can-drop-in' : '';
-  const cantDropInClass = (canDrop && !canDropIn) ? 'drop-area--cant-drop-in' : '';
-  return (
-    <div
-      ref={drop}
-      className={`numbers drop-area ${isOverClass} ${canDropClass} ${canDropInClass} ${cantDropInClass}`}
-      data-error={errorMessage}
-    >
-      {children}
-    </div>
-  )
 }
 
 export default App;
