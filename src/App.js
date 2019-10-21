@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import NumberItem from './components/NumberItem';
@@ -34,12 +34,30 @@ const App = () => {
       accept: ItemTypes.PRIME,
     },
   ]);
-  const [numbers, setNumber] = useState(new Array(12).fill().map((item, idx) => ({
-    id: idx + 1,
-    label: idx + 1,
-    currentBox: 'box-numbers',
-    type: ItemTypes.NUMBER,
-  })));
+  const [numbers, setNumber] = useState(() => {
+    const draggableNumbers = JSON.parse(localStorage.getItem('draggableNumbers') || '{}');
+    if (draggableNumbers && draggableNumbers.numbers) {
+      return draggableNumbers.numbers;
+    }
+
+    return new Array(12).fill().map((item, idx) => ({
+      id: idx + 1,
+      label: idx + 1,
+      currentBox: 'box-numbers',
+      type: ItemTypes.NUMBER,
+    }))
+  });
+
+  useEffect(
+    () => {
+      const storageNumbers = localStorage.getItem('draggableNumbers');
+      const stateNumbers = JSON.stringify({ numbers });
+      if (storageNumbers !== stateNumbers) {
+        localStorage.setItem('draggableNumbers', stateNumbers);
+      }
+    },
+  );
+
 
   /**
    * Handle Drop
@@ -68,20 +86,6 @@ const App = () => {
       <header className="header">
         <div className="container">
           <h1>Drag and Drop Numbers</h1>
-          <form className="form form-filter-numbers">
-            <label className="form-control">
-              <input type="checkbox" checked />
-              <span>Odd</span>
-            </label>
-            <label className="form-control">
-              <input type="checkbox" checked />
-              <span>Even</span>
-            </label>
-            <label className="form-control">
-              <input type="checkbox" checked />
-              <span>Prime</span>
-            </label>
-          </form>
         </div>
       </header>
       <div className="container">
