@@ -1,4 +1,4 @@
-# React Movies
+# React Numbers
 A React app to drag and drop some numbers between boxes.
 
 ## Todos
